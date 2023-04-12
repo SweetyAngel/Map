@@ -45,14 +45,15 @@ def main():
           break
         elif event.type == pygame.KEYUP:  
           mp.update(event)
-        elif event.key == 276:
-          self.lon -= my_step * math.pow(2, 15 - self.zoom)
-        elif event.key == 275:
-          self.lon += my_step * math.pow(2, 15 - self.zoom)
-        elif event.key == 273 and self.lat < 85:
-          self.lat += my_step * math.pow(2, 15 - self.zoom)
-        elif event.key == 274 and self.lat > -85:
-          self.lat -= my_step * math.pow(2, 15 - self.zoom)    
+        elif event.type == pygame.KEYDOWN:
+            if event.key == 276:
+              self.lon -= my_step * math.pow(2, 15 - self.zoom)
+            elif event.key == 275:
+              self.lon += my_step * math.pow(2, 15 - self.zoom)
+            elif event.key == 273 and self.lat < 85:
+              self.lat += my_step * math.pow(2, 15 - self.zoom)
+            elif event.key == 274 and self.lat > -85:
+              self.lat -= my_step * math.pow(2, 15 - self.zoom) 
         map_file = load_map(mp)
         screen.blit(pygame.image.load(map_file), (0, 0))
         pygame.display.flip()
