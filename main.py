@@ -1,20 +1,30 @@
-import pygame, requests, sys, os
+import pygame, requests, sys, os, math
  
 class MapParams(object):
     def __init__(self):
         self.lat = 61.665279  
         self.lon = 50.813492
-        self.zoom = 16  
+        self.zoom = 10
         self.type = "map"
  
     def ll(self):
         return str(self.lon)+","+str(self.lat)
     
     def update(self, event):
-      if event.key == 280 and self.zoom < 19:  
+      print(event.key)
+      my_step = 0.008
+      if event.key == 1073741921 and self.zoom < 19:  
         self.zoom += 1
-      elif event.key == 281 and self.zoom > 2:  
+      elif event.key == 1073741915 and self.zoom > 2:  
         self.zoom -= 1
+      elif event.key == 1073741904:
+        self.lon -= my_step * math.pow(2, 15 - self.zoom)
+      elif event.key == 1073741903:
+          self.lon += my_step * math.pow(2, 15 - self.zoom)
+      elif event.key == 1073741906 and self.lat < 85:
+          self.lat += my_step * math.pow(2, 15 - self.zoom)
+      elif event.key == 1073741905 and self.lat > -85:
+          self.lat -= my_step * math.pow(2, 15 - self.zoom)  
  
 def load_map(mp):
     map_request = "http://static-maps.yandex.ru/1.x/?ll={ll}&z={z}&l={type}".format(ll=mp.ll(), z=mp.zoom, type=mp.type)
@@ -35,25 +45,15 @@ def load_map(mp):
     return map_file
          
 def main():
-    my_step = 0.008
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
     mp = MapParams()
     while True:
         event = pygame.event.wait()
         if event.type == pygame.QUIT: 
-          break
+            break
         elif event.type == pygame.KEYUP:  
-          mp.update(event)
-        elif event.type == pygame.KEYDOWN:
-            if event.key == 276:
-              self.lon -= my_step * math.pow(2, 15 - self.zoom)
-            elif event.key == 275:
-              self.lon += my_step * math.pow(2, 15 - self.zoom)
-            elif event.key == 273 and self.lat < 85:
-              self.lat += my_step * math.pow(2, 15 - self.zoom)
-            elif event.key == 274 and self.lat > -85:
-              self.lat -= my_step * math.pow(2, 15 - self.zoom) 
+            mp.update(event)
         map_file = load_map(mp)
         screen.blit(pygame.image.load(map_file), (0, 0))
         pygame.display.flip()
